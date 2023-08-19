@@ -1,5 +1,3 @@
-use std::str::Bytes;
-
 pub mod tests;
 
 #[derive(PartialEq, Debug)]
@@ -14,6 +12,14 @@ pub enum Token {
     // operators
     ASSIGN,
     PLUS,
+    MINUS,
+    BANG,
+    ASTERISK,
+    SLASH,
+    LT,
+    GT,
+    EQ,
+    NOTEQ,
 
     // delimeters
     COMMA,
@@ -27,6 +33,11 @@ pub enum Token {
     // keywords
     FUNCTION,
     LET,
+    TRUE,
+    FALSE,
+    IF,
+    ELSE,
+    RETURN,
 }
 
 pub struct Lexer {
@@ -37,7 +48,7 @@ pub struct Lexer {
 }
 
 pub fn is_letter(ch: u8) -> bool {
-    ch.is_ascii_alphabetic() || ch == b'='
+    ch.is_ascii_alphabetic() || ch == b'_'
 }
 
 pub fn is_digit(ch: u8) -> bool {
@@ -48,6 +59,11 @@ pub fn lookup_ident(ident: String) -> Token {
     match ident.as_str() {
         "pungsi" => Token::FUNCTION,
         "ieu" => Token::LET,
+        "leres" => Token::TRUE,
+        "lepat" => Token::FALSE,
+        "lamun" => Token::IF,
+        "salianna" => Token::ELSE,
+        "pasihan" => Token::RETURN,
         _ => Token::IDENT(ident),
     }
 }
@@ -63,10 +79,25 @@ impl Lexer {
         self.read_position += 1;
     }
 
+    pub fn peek_char(&self) -> u8 {
+        if self.read_position >= self.input.len() {
+            0
+        } else {
+            self.input.as_bytes()[self.read_position]
+        }
+    }
+
     pub fn next_token(&mut self) -> Token {
         self.eat_whitespace();
         let tok = match self.ch {
-            b'=' => Token::ASSIGN,
+            b'=' => {
+                if self.peek_char() == b'=' {
+                    self.read_char();
+                    Token::EQ
+                } else {
+                    Token::ASSIGN
+                }
+            }
             b'+' => Token::PLUS,
             b';' => Token::SEMICOLON,
             b'(' => Token::LPAREN,
@@ -74,14 +105,28 @@ impl Lexer {
             b',' => Token::COMMA,
             b'{' => Token::LBRACE,
             b'}' => Token::RBRACE,
+            b'-' => Token::MINUS,
+            b'!' => {
+                if self.peek_char() == b'=' {
+                    self.read_char();
+                    Token::NOTEQ
+                } else {
+                    Token::BANG
+                }
+            }
+            b'*' => Token::ASTERISK,
+            b'/' => Token::SLASH,
+            b'<' => Token::LT,
+            b'>' => Token::GT,
             0 => Token::EOF,
             _ => {
                 if is_letter(self.ch) {
                     return lookup_ident(self.read_identifier());
                 } else if is_digit(self.ch) {
                     return Token::INT(self.read_number());
+                } else {
+                    Token::ILLEGAL
                 }
-                Token::ILLEGAL
             }
         };
         self.read_char();
