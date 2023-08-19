@@ -1,3 +1,4 @@
+pub mod repl;
 pub mod tests;
 
 #[derive(PartialEq, Debug)]
@@ -168,5 +169,5 @@ impl Lexer {
 }
 
 fn main() {
-    println!("Hello, world!");
+    repl::start();
 }
