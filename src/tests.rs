@@ -1,7 +1,8 @@
 #[cfg(test)]
 #[test]
 fn test_delimeter_tokens() {
-    use crate::{Lexer, Token};
+    use crate::lexer::Lexer;
+    use crate::token::Token;
 
     let input = "=+(){},;".to_string();
 
@@ -28,7 +29,9 @@ fn test_delimeter_tokens() {
 
 #[test]
 fn test_complex_token_1() {
-    use crate::{Lexer, Token};
+    use crate::lexer::Lexer;
+    use crate::token::Token;
+
     let input = r#"
     ieu lima = 5;
     ieu sapuluh = 10;
@@ -91,7 +94,9 @@ fn test_complex_token_1() {
 
 #[test]
 fn test_complex_token_2() {
-    use crate::{Lexer, Token};
+    use crate::lexer::Lexer;
+    use crate::token::Token;
+
     let input = r#"
     ieu lima = 5;
     ieu sapuluh = 10;
@@ -168,7 +173,9 @@ fn test_complex_token_2() {
 
 #[test]
 fn test_complex_token_3() {
-    use crate::{Lexer, Token};
+    use crate::lexer::Lexer;
+    use crate::token::Token;
+
     let input = r#"
     ieu lima = 5;
     ieu sapuluh = 10;

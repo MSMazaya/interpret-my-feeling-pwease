@@ -1,6 +1,6 @@
+use crate::lexer::Lexer;
+use crate::token::Token;
 use std::io;
-
-use crate::{Lexer, Token};
 
 const PROMPT: &'static str = ">>";
 
